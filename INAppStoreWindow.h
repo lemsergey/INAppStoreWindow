@@ -146,4 +146,10 @@
 typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow, 
                                                      CGRect drawingRect, CGPathRef clippingPath);
 @property (INAppStoreWindowCopy) INAppStoreWindowTitleBarDrawingBlock titleBarDrawingBlock;
+
+/**
+ Hold content height could be helpfull if title bar needs to be extended for temporary purpose (like toolbar in fullscreen mode)
+ */
+@property (nonatomic, getter = isContentHeightHold) BOOL holdContentHeight;
+
 @end

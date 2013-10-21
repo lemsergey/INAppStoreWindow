@@ -16,9 +16,7 @@
 //
 
 #import "INAppStoreWindow.h"
-
 #import <objc/runtime.h>
-
 
 #define IN_RUNNING_LION (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
 #define IN_COMPILING_LION __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
@@ -142,7 +140,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     if ([self.secondaryDelegate respondsToSelector:_cmd]) {
         return [self.secondaryDelegate window:window willPositionSheet:sheet usingRect:rect];
     }
-    rect.origin.y = NSHeight(window.frame) - window.titleBarHeight;
+    rect.origin.y = NSHeight(window.frame)-NSHeight(window.titleBarView.frame);
     return rect;
 }
 
@@ -163,7 +161,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (void)_recalculateFrameForTitleBarContainer;
 - (void)_repositionContentView;
 - (void)_layoutTrafficLightsAndContent;
-- (CGFloat)_minimumTitlebarHeight;
+- (CGFloat)_standardTitlebarHeight;
 - (void)_displayWindowAndTitlebar;
 - (void)_hideTitleBarView:(BOOL)hidden;
 - (CGFloat)_defaultTrafficLightLeftMargin;
@@ -424,6 +422,10 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 	BOOL _preventWindowFrameChange;
     INAppStoreWindowDelegateProxy *_delegateProxy;
     INTitlebarContainer *_titleBarContainer;
+#if IN_COMPILING_LION
+    NSLayoutConstraint *_heightConstraint;
+    NSLayoutConstraint *_titleBarBottomConstraint;
+#endif
 }
 
 @synthesize titleBarView = _titleBarView;
@@ -492,6 +494,21 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 #pragma mark -
 #pragma mark NSWindow Overrides
 
+#if IN_COMPILING_LION
+- (void)layoutIfNeeded
+{
+    NSRect titleBarFrameBefore = self.titleBarView.frame;
+    [super layoutIfNeeded];
+    NSRect titleBarFrameAfter = self.titleBarView.frame;
+    if (  NSHeight(titleBarFrameBefore) != NSHeight(titleBarFrameAfter)
+        ||NSWidth(titleBarFrameBefore) != NSWidth(titleBarFrameAfter) ) {
+        // if we omit this if, _layoutTrafficLightsAndContent will trigger layout needed
+        [self _layoutTrafficLightsAndContent];
+    }
+
+}
+#endif
+
 - (void)becomeKeyWindow
 {
     [super becomeKeyWindow];
@@ -519,6 +536,17 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     [self _updateTitlebarView];
 }
 
+static NSComparisonResult titleBarContainerComparator( NSView * view1, NSView * view2, void * context )
+{
+    if ([view1 isKindOfClass:[INTitlebarContainer class]]) {
+        return NSOrderedDescending;
+        
+    } else if ([view2 isKindOfClass:[INTitlebarContainer class]]) {
+        return NSOrderedAscending;
+    }
+    return NSOrderedSame;
+}
+
 - (void)setContentView:(NSView *)aView
 {
 	// Remove performance-optimized content view class when changing content views
@@ -533,7 +561,10 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     if (aView && object_getClass(aView) == [NSView class]) {
 		object_setClass(aView, [INAppStoreWindowContentView class]);
     }
-	
+    
+    if (_titleBarContainer) {
+        [aView.superview sortSubviewsUsingFunction:titleBarContainerComparator context:NULL];
+    }
     [self _repositionContentView];
 }
 
@@ -569,9 +600,38 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
         [_titleBarView release];
         _titleBarView = [newTitleBarView retain];
         #endif
-        [_titleBarView setFrame:[_titleBarContainer bounds]];
-        [_titleBarView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [_titleBarContainer addSubview:_titleBarView];
+
+        #if IN_COMPILING_LION
+        if (IN_RUNNING_LION && newTitleBarView.translatesAutoresizingMaskIntoConstraints == NO) {
+            if (_heightConstraint) {
+                [_titleBarContainer removeConstraint:_heightConstraint];
+                _heightConstraint = nil;
+            }
+            [_titleBarContainer addSubview:_titleBarView];
+
+            NSDictionary *views = NSDictionaryOfVariableBindings( _titleBarView, _titleBarContainer );
+            NSMutableArray *constraints = [[NSMutableArray alloc] init];
+            [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_titleBarView]|" options:0 metrics:nil views:views]];
+            [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_titleBarView]|" options:0 metrics:nil views:views]];
+            [_titleBarContainer addConstraints:constraints];
+            
+        } else {
+            if (!_heightConstraint) {
+                _heightConstraint = [NSLayoutConstraint constraintWithItem:_titleBarContainer
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:nil
+                                                                 attribute:0 multiplier:0 constant:_titleBarHeight];
+                [_titleBarContainer addConstraint:_heightConstraint];
+            }
+            [_titleBarContainer layout]; // make sure we have the right bounds before setting frame of titleBarView
+#endif
+            [_titleBarView setFrame:[_titleBarContainer bounds]];
+            [_titleBarView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+            [_titleBarContainer addSubview:_titleBarView];
+#if IN_COMPILING_LION
+        }
+        #endif
     }
 }
 
@@ -584,9 +644,18 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 {
     if (_titleBarHeight != newTitleBarHeight) {
         _cachedTitleBarHeight = newTitleBarHeight;
-        _titleBarHeight = _cachedTitleBarHeight;
-        [self _layoutTrafficLightsAndContent];
-        [self _displayWindowAndTitlebar];
+		_titleBarHeight = _cachedTitleBarHeight;
+#if IN_COMPILING_LION
+        if (_heightConstraint) {
+            _heightConstraint.constant = newTitleBarHeight;
+            [self layoutIfNeeded];
+        } else {
+#endif
+            [self _layoutTrafficLightsAndContent];
+            [self _displayWindowAndTitlebar];
+#if IN_COMPILING_LION
+        }
+#endif
     }
 }
 
@@ -786,6 +855,21 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 		[super setFrame:frameRect display:displayFlag animate:animateFlag];
 }
 
+- (void)setHoldContentHeight:(BOOL)holdContentHeight
+{
+    if (holdContentHeight && !_titleBarBottomConstraint) {
+        _titleBarBottomConstraint = [NSLayoutConstraint constraintWithItem:_titleBarContainer.superview attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:_titleBarContainer attribute:NSLayoutAttributeBottom multiplier:1.0 constant:NSMinY([_titleBarContainer frame])];
+        [_titleBarContainer.superview addConstraint:_titleBarBottomConstraint];
+        [self layoutIfNeeded];
+    } else if (!holdContentHeight && _titleBarBottomConstraint) {
+        [_titleBarContainer.superview removeConstraint:_titleBarBottomConstraint];
+        _titleBarBottomConstraint = nil;
+        [self layoutIfNeeded];
+    }
+    
+    _holdContentHeight = holdContentHeight;
+}
+
 #pragma mark -
 #pragma mark Private
 
@@ -793,7 +877,7 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 {
     _showsBaselineSeparator = YES;
     _centerTrafficLightButtons = YES;
-    _titleBarHeight = [self _minimumTitlebarHeight];
+    _titleBarHeight = [self _standardTitlebarHeight];
     _cachedTitleBarHeight = _titleBarHeight;
     _trafficLightButtonsLeftMargin = [self _defaultTrafficLightLeftMargin];
     _delegateProxy = [INAppStoreWindowDelegateProxy alloc];
@@ -1011,9 +1095,28 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     // Create the title bar view
     INTitlebarContainer *container = [[INTitlebarContainer alloc] initWithFrame:NSZeroRect];
     // Configure the view properties and add it as a subview of the theme frame
-    NSView *firstSubview = [[[self themeFrameView] subviews] objectAtIndex:0];
-    [self _recalculateFrameForTitleBarContainer];
-    [[self themeFrameView] addSubview:container positioned:NSWindowBelow relativeTo:firstSubview];
+    NSView *themeFrame = [[self contentView] superview];
+    NSView *firstSubview = [[themeFrame subviews] objectAtIndex:0];
+    
+#if IN_COMPILING_LION
+    if (IN_RUNNING_LION) {
+        container.translatesAutoresizingMaskIntoConstraints = NO;
+        if (self.contentView) {
+            [themeFrame addSubview:container positioned:NSWindowAbove relativeTo:self.contentView];
+        } else {
+            [themeFrame addSubview:container positioned:NSWindowBelow relativeTo:firstSubview];
+        }
+        NSDictionary *views = NSDictionaryOfVariableBindings( themeFrame, container );
+        [themeFrame addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[container]|" options:0 metrics:nil views:views]];
+        [themeFrame addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[container]->=0-|" options:0 metrics:nil views:views]];
+    } else {
+#endif
+        [self _recalculateFrameForTitleBarContainer];
+        [[self themeFrameView] addSubview:container positioned:NSWindowBelow relativeTo:firstSubview];
+#if IN_COMPILING_LION
+    }
+#endif
+
     #if __has_feature(objc_arc)
     _titleBarContainer = container;
     self.titleBarView = [[INTitlebarView alloc] initWithFrame:NSZeroRect];
@@ -1037,9 +1140,19 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 - (void)_recalculateFrameForTitleBarContainer
 {
-    NSRect themeFrameRect = [[self themeFrameView] frame];
-    NSRect titleFrame = NSMakeRect(0.0, NSMaxY(themeFrameRect) - _titleBarHeight, NSWidth(themeFrameRect), _titleBarHeight);
-    [_titleBarContainer setFrame:titleFrame];
+    
+#if IN_COMPILING_LION
+    if (IN_RUNNING_LION) { // && self.titleBarView.translatesAutoresizingMaskIntoConstraints == NO) {
+        // do nothing, autolayout will do it for us
+    } else {
+#endif
+        NSRect themeFrameRect = [[self themeFrameView] frame];
+        NSRect titleFrame = NSMakeRect(0.0, NSMaxY(themeFrameRect) - _titleBarHeight, NSWidth(themeFrameRect), _titleBarHeight);
+        [_titleBarContainer setFrame:titleFrame];
+#if IN_COMPILING_LION
+    }
+#endif
+
 }
 
 - (NSRect)_contentViewFrame
@@ -1047,7 +1160,10 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     NSRect windowFrame = self.frame;
     NSRect contentRect = [self contentRectForFrameRect:windowFrame];
     
-    contentRect.size.height = NSHeight(windowFrame) - _titleBarHeight;
+    if (!self.holdContentHeight) {
+        _cachedTitleBarHeight = NSHeight(self.titleBarView.frame);
+    }
+    contentRect.size.height = NSHeight(windowFrame) - _cachedTitleBarHeight;
     contentRect.origin = NSZeroPoint;
     
     return contentRect;
@@ -1064,12 +1180,13 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
     }
 }
 
-- (CGFloat)_minimumTitlebarHeight
+- (CGFloat)_standardTitlebarHeight
 {
     static CGFloat minTitleHeight = 0.0;
     if (!minTitleHeight) {
         NSRect frameRect = [self frame];
-        NSRect contentRect = [self contentRectForFrameRect:frameRect];
+        // call the super implementation because we want Cocoa's default height
+        NSRect contentRect = [super contentRectForFrameRect:frameRect];
         minTitleHeight = NSHeight(frameRect) - NSHeight(contentRect);
     }
     return minTitleHeight;
@@ -1078,9 +1195,9 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 - (CGFloat)_defaultTrafficLightLeftMargin
 {
     static CGFloat trafficLightLeftMargin = 0.0;
-    if (!trafficLightLeftMargin) {
-        NSButton *close = [self _closeButtonToLayout];
-        trafficLightLeftMargin = NSMinX(close.frame);
+    if ( !trafficLightLeftMargin ) {
+        NSButton *close = [self standardWindowButton:NSWindowCloseButton];
+        trafficLightLeftMargin = NSMinX(close.frame); // on my setup this gives 0, which I believe is wrong...
     }
     return trafficLightLeftMargin;
 }
