@@ -404,14 +404,12 @@ NS_INLINE CGGradientRef INCreateGradientWithColors(NSColor *startingColor, NSCol
 
 - (void)setFrame:(NSRect)frameRect
 {
-    NSLog(@"resize window CV: %@", NSStringFromRect(frameRect));
 	frameRect = [(INAppStoreWindow *)self.window _contentViewFrame];
 	[super setFrame:frameRect];
 }
 
 - (void)setFrameSize:(NSSize)newSize
 {
-    NSLog(@"resize window CS: %@", NSStringFromSize(newSize));
 	newSize = [(INAppStoreWindow *)self.window _contentViewFrame].size;
 	[super setFrameSize:newSize];
 }
@@ -1180,7 +1178,6 @@ static NSComparisonResult titleBarContainerComparator( NSView * view1, NSView * 
     NSView *contentView = [self contentView];
     NSRect newFrame = [self _contentViewFrame];
     if (!NSEqualRects([contentView frame], newFrame)) {
-        NSLog(@"%@ %@", NSStringFromSelector(_cmd) , NSStringFromRect(newFrame));
         [contentView setFrame:newFrame];
         [contentView setNeedsDisplay:YES];
     }
