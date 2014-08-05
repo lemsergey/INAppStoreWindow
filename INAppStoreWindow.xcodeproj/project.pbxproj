@@ -27,10 +27,12 @@
 		03970F101315CE4400F15C7E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 03970F0E1315CE4400F15C7E /* MainMenu.xib */; };
 		03970F1C1315CECF00F15C7E /* SampleWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03970F1B1315CECF00F15C7E /* SampleWindowController.m */; };
 		03970F1E1315D2CB00F15C7E /* SampleWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 03970F1D1315D2CB00F15C7E /* SampleWindow.xib */; };
+		140B90C2195E0DC9009D9445 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 140B90C1195E0DC8009D9445 /* Carbon.framework */; };
+		140B90C3195E0DE0009D9445 /* INWindowBackgroundView+CoreUIRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E5C1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m */; };
+		140B90C4195E0DE1009D9445 /* INWindowBackgroundView+CoreUIRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E5C1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m */; };
+		14732BB41960C41D00593899 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 140B90C1195E0DC8009D9445 /* Carbon.framework */; };
 		14F93E611884477000FAF7C8 /* INAppStoreWindowSwizzling.c in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E601884477000FAF7C8 /* INAppStoreWindowSwizzling.c */; };
 		14F93E621884477000FAF7C8 /* INAppStoreWindowSwizzling.c in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E601884477000FAF7C8 /* INAppStoreWindowSwizzling.c */; };
-		14F93E631884493200FAF7C8 /* INTitlebarView+CoreUIRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E5C1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.m */; };
-		14F93E641884493300FAF7C8 /* INTitlebarView+CoreUIRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F93E5C1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.m */; };
 		E924075116A2F4F200989DF3 /* close-active-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924073D16A2F4F200989DF3 /* close-active-color.tiff */; };
 		E924075216A2F4F200989DF3 /* close-active-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924073D16A2F4F200989DF3 /* close-active-color.tiff */; };
 		E924075316A2F4F200989DF3 /* close-activenokey-color.tiff in Resources */ = {isa = PBXBuildFile; fileRef = E924073E16A2F4F200989DF3 /* close-activenokey-color.tiff */; };
@@ -93,8 +95,10 @@
 		03970F1A1315CECF00F15C7E /* SampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleWindowController.h; sourceTree = "<group>"; };
 		03970F1B1315CECF00F15C7E /* SampleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleWindowController.m; sourceTree = "<group>"; };
 		03970F1D1315D2CB00F15C7E /* SampleWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleWindow.xib; sourceTree = "<group>"; };
-		14F93E5B1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "INTitlebarView+CoreUIRendering.h"; sourceTree = "<group>"; };
-		14F93E5C1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "INTitlebarView+CoreUIRendering.m"; sourceTree = "<group>"; };
+		140B90C1195E0DC8009D9445 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		14739470194C31330012F94C /* INAppStoreWindowCompatibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindowCompatibility.h; sourceTree = "<group>"; };
+		14F93E5B1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "INWindowBackgroundView+CoreUIRendering.h"; sourceTree = "<group>"; };
+		14F93E5C1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "INWindowBackgroundView+CoreUIRendering.m"; sourceTree = "<group>"; };
 		14F93E5F1884477000FAF7C8 /* INAppStoreWindowSwizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INAppStoreWindowSwizzling.h; sourceTree = "<group>"; };
 		14F93E601884477000FAF7C8 /* INAppStoreWindowSwizzling.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = INAppStoreWindowSwizzling.c; sourceTree = "<group>"; };
 		E924073D16A2F4F200989DF3 /* close-active-color.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "close-active-color.tiff"; sourceTree = "<group>"; };
@@ -119,6 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14732BB41960C41D00593899 /* Carbon.framework in Frameworks */,
 				030C7A6115EE8D730050DFB5 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -127,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				140B90C2195E0DC9009D9445 /* Carbon.framework in Frameworks */,
 				03970EFA1315CE4400F15C7E /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -143,7 +149,8 @@
 				030C7A7815EE8D730050DFB5 /* MainMenu.xib */,
 				030C7A6715EE8D730050DFB5 /* Supporting Files */,
 			);
-			path = SampleDocumentApp;
+			name = SampleDocumentApp;
+			path = Examples/SampleDocumentApp;
 			sourceTree = "<group>";
 		};
 		030C7A6715EE8D730050DFB5 /* Supporting Files */ = {
@@ -163,8 +170,8 @@
 			children = (
 				14F93E5F1884477000FAF7C8 /* INAppStoreWindowSwizzling.h */,
 				14F93E601884477000FAF7C8 /* INAppStoreWindowSwizzling.c */,
-				14F93E5B1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.h */,
-				14F93E5C1884433200FAF7C8 /* INTitlebarView+CoreUIRendering.m */,
+				14F93E5B1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.h */,
+				14F93E5C1884433200FAF7C8 /* INWindowBackgroundView+CoreUIRendering.m */,
 				03657F39187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.h */,
 				03657F3A187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m */,
 			);
@@ -195,6 +202,7 @@
 		03970EF81315CE4400F15C7E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				140B90C1195E0DC8009D9445 /* Carbon.framework */,
 				03970EF91315CE4400F15C7E /* Cocoa.framework */,
 			);
 			name = Frameworks;
@@ -212,7 +220,8 @@
 				E924073C16A2F4EB00989DF3 /* Resources */,
 				03970F001315CE4400F15C7E /* Supporting Files */,
 			);
-			path = SampleApp;
+			name = SampleApp;
+			path = Examples/SampleApp;
 			sourceTree = "<group>";
 		};
 		03970F001315CE4400F15C7E /* Supporting Files */ = {
@@ -231,13 +240,13 @@
 			isa = PBXGroup;
 			children = (
 				03657F38187A4D1F00C969BA /* Extensions */,
+				14739470194C31330012F94C /* INAppStoreWindowCompatibility.h */,
 				03657F30187A4D1500C969BA /* INAppStoreWindow.h */,
 				03657F31187A4D1500C969BA /* INAppStoreWindow.m */,
 				03657F32187A4D1500C969BA /* INWindowButton.h */,
 				03657F33187A4D1500C969BA /* INWindowButton.m */,
 			);
-			name = INAppStoreWindow;
-			path = ../INAppStoreWindow;
+			path = INAppStoreWindow;
 			sourceTree = "<group>";
 		};
 		E924073C16A2F4EB00989DF3 /* Resources */ = {
@@ -308,7 +317,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Indragie Karunaratne";
 			};
-			buildConfigurationList = 03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "SampleApp" */;
+			buildConfigurationList = 03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "INAppStoreWindow" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -388,7 +397,7 @@
 			files = (
 				03657F3B187A4D6B00C969BA /* NSDocument+INAppStoreWindowFixes.m in Sources */,
 				03657F35187A4D1500C969BA /* INAppStoreWindow.m in Sources */,
-				14F93E631884493200FAF7C8 /* INTitlebarView+CoreUIRendering.m in Sources */,
+				140B90C3195E0DE0009D9445 /* INWindowBackgroundView+CoreUIRendering.m in Sources */,
 				030C7A6D15EE8D730050DFB5 /* main.m in Sources */,
 				03657F37187A4D1500C969BA /* INWindowButton.m in Sources */,
 				030C7A7415EE8D730050DFB5 /* Document.m in Sources */,
@@ -402,7 +411,7 @@
 			files = (
 				03970F071315CE4400F15C7E /* main.m in Sources */,
 				03970F0D1315CE4400F15C7E /* SampleAppAppDelegate.m in Sources */,
-				14F93E641884493300FAF7C8 /* INTitlebarView+CoreUIRendering.m in Sources */,
+				140B90C4195E0DE1009D9445 /* INWindowBackgroundView+CoreUIRendering.m in Sources */,
 				03657F36187A4D1500C969BA /* INWindowButton.m in Sources */,
 				03657F34187A4D1500C969BA /* INAppStoreWindow.m in Sources */,
 				03970F1C1315CECF00F15C7E /* SampleWindowController.m in Sources */,
@@ -485,15 +494,14 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleDocumentApp/SampleDocumentApp-Prefix.pch";
+				GCC_PREFIX_HEADER = "Examples/SampleDocumentApp/SampleDocumentApp-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "SampleDocumentApp/SampleDocumentApp-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				INFOPLIST_FILE = "Examples/SampleDocumentApp/SampleDocumentApp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -512,10 +520,9 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleDocumentApp/SampleDocumentApp-Prefix.pch";
+				GCC_PREFIX_HEADER = "Examples/SampleDocumentApp/SampleDocumentApp-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "SampleDocumentApp/SampleDocumentApp-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				INFOPLIST_FILE = "Examples/SampleDocumentApp/SampleDocumentApp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -580,8 +587,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleApp/SampleApp-Prefix.pch";
-				INFOPLIST_FILE = "SampleApp/SampleApp-Info.plist";
+				GCC_PREFIX_HEADER = "Examples/SampleApp/SampleApp-Prefix.pch";
+				INFOPLIST_FILE = "Examples/SampleApp/SampleApp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -597,8 +604,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SampleApp/SampleApp-Prefix.pch";
-				INFOPLIST_FILE = "SampleApp/SampleApp-Info.plist";
+				GCC_PREFIX_HEADER = "Examples/SampleApp/SampleApp-Prefix.pch";
+				INFOPLIST_FILE = "Examples/SampleApp/SampleApp-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -616,7 +623,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "SampleApp" */ = {
+		03970EEF1315CE4400F15C7E /* Build configuration list for PBXProject "INAppStoreWindow" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				03970F111315CE4400F15C7E /* Debug */,

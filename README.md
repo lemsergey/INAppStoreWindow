@@ -1,20 +1,31 @@
-## INAppStoreWindow: Mac App Store style NSWindow subclass
+## INAppStoreWindow
+#### Title bar and traffic light customization for NSWindow
 
-INAppStoreWindow is an NSWindow subclass that mimics the appearance of the main window in the Mac App Store application. These modifications consist of enlarging the title bar, and centering the traffic lights **(note that this subclass does not handle the creation of a toolbar)**. The end result looks like this:
+`INAppStoreWindow` is an NSWindow subclass that was originally developed to mimic the appearance of the main window in the Mac App Store application introduced in OS X 10.6.6.
 
-![INAppStoreWindow](http://i41.tinypic.com/abidd1.png)
+The MAS application has since transitioned away from this design, but `INAppStoreWindow` is still being actively developed to provide extensive additional customization options for `NSWindow` title bars.
+
+![INAppStoreWindow](images/screenshot.png)
 
 **Features of INAppStoreWindow:**
 
-* No use of private APIs, so it's App Store friendly!
-* The title bar view is entirely customizable -- you can add subviews (toolbars, buttons, etc.) as well as customize the title bar itself to give it a different appearance
-* The height of the title bar is easily adjustable
-* Default `NSWindow` traffic light buttons appearance customization
-* Window's title appearance customization
-* Compiles and runs perfectly under ARC and non-ARC setups (thanks to [@kgn](https://github.com/kgn))
-* Support's Lion's full screen mode
+* No private API usage and Mac App Store friendly.
+* Fully customizable title bar view -- add subviews (toolbars, buttons, etc.) and block based drawing for custom backgrounds
+* Adjustable title bar height
+* Customization of the traffic light/fullscreen buttons for all button states.
+* Customization of the window title text.
+* Works on OS X versions 10.6-10.9
+* Compatible with full screen mode in OS X 10.7+
+
+
+#### [All of these great apps are using INAppStoreWindow in production!](https://github.com/indragiek/INAppStoreWindow/wiki)
+
 
 ## Usage
+
+### ARC
+
+`INAppStoreWindow` now requires ARC to compile. If your project does not use ARC, compile `INAppStoreWindow.m` with the `-fobjc-arc` linker flag.
 
 ### Basic Configuration
 
@@ -94,7 +105,7 @@ You can enable title drawing by setting `showsTitle` property to `YES`. For NSDo
 
 A lot of time and effort has gone into making the custom titlebar in INAppStoreWindow function just right, it would be a shame to have to re-implement all this work just to draw your own custom title bar. So INAppStoreWindow has a `titleBarDrawingBlock` property that can be set to a block containing your own drawing code!
 
-[![](http://dribbble.s3.amazonaws.com/users/7253/screenshots/541256/notepad.png)](http://dribbble.com/shots/541256-Notepad-App-Mockup)
+[![Custom Window](images/custom-window.png)](http://dribbble.com/shots/541256-Notepad-App-Mockup)
 
 ```obj-c
 [self.window setTitleBarDrawingBlock:^(BOOL drawsAsMainWindow, CGRect drawingRect, CGPathRef clippingPath){
@@ -117,11 +128,29 @@ self.window.inactiveTitleBarEndColor       = [NSColor colorWithCalibratedWhite: 
 self.window.inactiveTitleBarStartColor     = [NSColor colorWithCalibratedWhite: 0.8  alpha: 1.0];
 self.window.inactiveBaselineSeparatorColor = [NSColor colorWithCalibratedWhite: 0.4  alpha: 1.0];
 ```
+## Extensions
 
+Additional extensions for `INAppStoreWindow` are provided in the **Extensions** subfolder. 
+
+### NSDocument+INAppStoreWindowFixes
+
+Add this category to your project to [fix](https://github.com/indragiek/INAppStoreWindow/issues/91) title bar layout for document based apps in response to `-[NSDocument updateChangeCount:]`. This fix was separated from the main `INAppStoreWindow` codebase because it swizzles methods on `NSDocument`.
+
+### INTitlebarView+CoreUIRendering
+
+Add this category to your project to use CoreUI to render the system default title bar gradient, noise texture, and baseline separator. This will provide the most accurate visual results. You should **only** add this category to your project if you intend to release outside the App Store!
+
+If you use this category you **must** define the preprocessor symbol `INAPPSTOREWINDOW_NO_COREUI` with a value of 1 in the build configuration for your Mac App Store version in order to exclude this code because it **uses private APIs and will result in rejection if included in a Mac App Store submission**.
+
+When CoreUI rendering is not available, INAppStoreWindow will emulate the rendering of the system title bar as closely as possible.
+
+## C# Port (Unofficial)
+
+[`AppStoreWindow`](https://github.com/ashokgelal/AppStoreWindow) is a pure MonoMac implementation of `INAppStoreWindow` by [@ashokgelal](https://github.com/ashokgelal). 
 
 ## Authors
 
-INAppStoreWindow is maintained by [Indragie Karunaratne](http://indragie.com) and [David Keegan](http://inscopeapps.com). Special thanks to [everyone else](https://github.com/indragiek/INAppStoreWindow/contributors) who contributed various fixes and improvements to the code.
+INAppStoreWindow is maintained by [Indragie Karunaratne](http://indragie.com), who could not have done it without [**many awesome contributors**](https://github.com/indragiek/INAppStoreWindow/contributors).
 
 ## Licensing
 

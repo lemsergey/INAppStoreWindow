@@ -1,0 +1,36 @@
+diff a/INWindowButton.m b/INWindowButton.m	(rejected hunks)
+@@ -300,20 +293,22 @@ NSString *const kINWindowButtonGroupDefault = @"com.indragie.inappstorewindow.de
+ 	}
+ }
+ 
+-- (void)updateImage {
+-    if ([self.window isKeyWindow]) {
+-        [self updateActiveImage];
+-    } else {
+-        self.image = self.activeNotKeyWindowImage;
+-    }
++- (void)updateImage
++{
++	if ([self.window isKeyWindow]) {
++		[self updateActiveImage];
++	} else {
++		self.image = self.activeNotKeyWindowImage;
++	}
+ }
+ 
+-- (void)updateActiveImage {
+-    if ([self isEnabled]) {
+-        self.image = self.activeImage;
+-    } else {
+-        self.image = self.inactiveImage;
+-    }
++- (void)updateActiveImage
++{
++	if ([self isEnabled]) {
++		self.image = self.activeImage;
++	} else {
++		self.image = self.inactiveImage;
++	}
+ }
+ 
+ @end

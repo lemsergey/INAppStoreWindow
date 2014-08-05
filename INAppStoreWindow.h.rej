@@ -1,0 +1,11 @@
+diff a/INAppStoreWindow.h b/INAppStoreWindow.h	(rejected hunks)
+@@ -148,7 +150,7 @@
+  it would be a shame to have to re-invent that just to change the look. So this block can be used
+  to override the default Mac App Store style titlebar drawing with your own drawing code!
+  */
+-typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow, 
+-                                                     CGRect drawingRect, CGPathRef clippingPath);
++typedef void (^INAppStoreWindowTitleBarDrawingBlock)(BOOL drawsAsMainWindow,
++		CGRect drawingRect, CGPathRef clippingPath);
+ @property (INAppStoreWindowCopy) INAppStoreWindowTitleBarDrawingBlock titleBarDrawingBlock;
+ @end
